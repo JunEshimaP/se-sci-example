@@ -5,11 +5,11 @@ on:
   push:
     branches:
       - main
-      
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true      
-      
+  cancel-in-progress: true
+
 jobs:
   lint:
     name: Lint
@@ -20,27 +20,27 @@ jobs:
         with:
           python-version: "3.x"
       - uses: pre-commit/action@v3.0.0
-  
+
+
   tests:
     needs: [lint]
-    name: Test ${{matrix.runs_on}}
+    name: Test ${{ matrix.runs-on }}
     runs-on: ${{ matrix.runs-on }}
     strategy:
-      matrix: 
-        runs-on: 
+      fail-fast: false
+      matrix:
+        runs-on:
           - ubuntu-latest
           - windows-latest
-          - macos-latest
-        python-version: ["3.9", "3.11"]
     steps:
       - uses: actions/checkout@v3
-      
+
       - uses: actions/setup-python@v4
         with:
-          python-version: 3.11
+          python-version: "3.11"
 
-      - name: Install package
+      - name: Install package and test requirements
         run: python -m pip install .[test]
 
-      - name: Test package
-        run: python -m pytest
+      - run: python -m pytest
+
