@@ -22,6 +22,7 @@ jobs:
       - uses: pre-commit/action@v3.0.0
   
   tests:
+    needs: [lint]
     name: Test ${{matrix.runs_on}}
     runs-on: ${{ matrix.runs-on }}
     strategy:
